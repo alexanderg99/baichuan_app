@@ -5,8 +5,11 @@ WORKDIR /project
 
 COPY ./requirements.txt /project/requirements.txt
 #copy all the code and files from this container to the container.
-RUN pip install --no-cache-dir -r /project/requirements.txt
+RUN pip install -r /project/requirements.txt
 #install all requirements.
 COPY ./app /project/app
+
+EXPOSE 8000
+
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
