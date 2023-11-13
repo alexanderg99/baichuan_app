@@ -23,7 +23,7 @@ async def read_root():
 async def chat(data: dict) -> dict:
     try:
          input_text = data["text"]
-         response = Chatbot.chat(input_text)
+         response = baichuan.chat(input_text)
 
     except Exception as e:
          logging.log.error("Retry")

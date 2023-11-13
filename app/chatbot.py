@@ -11,3 +11,8 @@ class Chatbot:
         messages.append({"role": "user", "content": prompt})
         response = self.model.chat(self.tokenizer, messages)
         return response
+
+
+#baichuan=Chatbot()
+#response = baichuan.chat('Tell me the plot of 1984')
+#print(response)
