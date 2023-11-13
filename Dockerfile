@@ -11,5 +11,5 @@ COPY ./app /project/app
 
 EXPOSE 8000
 
-CMD ["python", "app/main.py"]
+CMD ["uvicorn", "main:app", "--reload"]
 

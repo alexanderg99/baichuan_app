@@ -7,12 +7,12 @@ class Model:
         pass
 
     def load_model():
-        model = AutoModelForCausalLM.from_pretrained("./models/Baichuan2/",load_in_8bit=True, device_map="cuda:0", trust_remote_code=True)
-        model.generation_config = GenerationConfig.from_pretrained("./models/Baichuan2")
+        model = AutoModelForCausalLM.from_pretrained("baichuan-inc/Baichuan-7B",load_in_8bit=True, device_map="cuda:0", trust_remote_code=True)
+        model.generation_config = GenerationConfig.from_pretrained("baichuan-inc/Baichuan-7B", trust_remote_code=True)
         
 
         return model
     
     def load_tokenizer():
-        tokenizer = AutoTokenizer.from_pretrained("./models/Baichuan2/",trust_remote_code=True)
+        tokenizer = AutoTokenizer.from_pretrained("baichuan-inc/Baichuan-7B",trust_remote_code=True)
         return tokenizer
