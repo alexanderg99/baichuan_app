@@ -1,11 +1,32 @@
+from fastapi import FastAPI, Request, APIRouter
+from fastapi.responses import HTMLResponse
+from pydantic import BaseModel
+from typing import Optional
 
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
-from transformers.generation.utils import GenerationConfig
-tokenizer = AutoTokenizer.from_pretrained("baichuan-inc/Baichuan2-13B-Chat", use_fast=False, trust_remote_code=True)
-model = AutoModelForCausalLM.from_pretrained("baichuan-inc/Baichuan2-13B-Chat", device_map="auto", torch_dtype=torch.bfloat16, trust_remote_code=True)
-model.generation_config = GenerationConfig.from_pretrained("baichuan-inc/Baichuan2-13B-Chat")
-messages = []
-messages.append({"role": "user", "content": "解释一下“温故而知新”"})
-response = model.chat(tokenizer, messages)
-print(response)
+
+import uvicorn
+import logging
+
+app = FastAPI()
+router = APIRouter()
+
+class Query(BaseModel):
+    query: str
+    
+
+
+@app.get("/")
+async def read_root():
+    return {"message": "Deployment is possible."}
+
+
+@app.post("/chat")
+async def chat(data: Query):
+    
+    input_text = data.query
+    response = f"I Have Heard Your Question. You asked {input_text}"
+    return {"response":response}
+
+if __name__ == "__main__":
+      uvicorn.run("test_inference:app", reload=True, port=8000, host="0.0.0.0")
+      

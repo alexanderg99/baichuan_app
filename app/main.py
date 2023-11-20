@@ -5,12 +5,16 @@ from fastapi.responses import HTMLResponse
 import uvicorn
 import logging
 from chatbot import Chatbot
+from pydantic import BaseModel
 
 
 app = FastAPI()
 router = APIRouter()
 #templates = Jinja2Templates(directory="templates")
 baichuan=Chatbot()
+class Query(BaseModel):
+    query: str
+
 
 
 
@@ -20,10 +24,11 @@ async def read_root():
 
 
 @app.post("/chat")
-async def chat(data: dict) -> dict:
+async def chat(data: Query):
     try:
-         input_text = data["text"]
+         input_text = data.query
          response = baichuan.chat(input_text)
+         
 
     except Exception as e:
          logging.log.error("Retry")
@@ -33,4 +38,4 @@ async def chat(data: dict) -> dict:
     return {"response": response}
 
 if __name__ == "__main__":
-      uvicorn.run("app:app", reload=True, port=6000, host="0.0.0.0")
+      uvicorn.run("app:app", reload=True, port=8000, host="0.0.0.0")
