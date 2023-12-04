@@ -31,13 +31,11 @@ async def chat(request: Request, data: Query):
     try:
          input_text = data.query
          response = baichuan.chat(input_text)
-         logger.info(f"Request: {request.url} - Input: {input_text}")
-         logger.info(f"Response: {response}")
          return templates.TemplateResponse("index.html", {"request": request, "response": response})
 
     except Exception as e:
-         logging.log.error("Retry")
-
+         
+         logging.error(f"An exception occurred: {e}")
 
 
     return {"response": response}
