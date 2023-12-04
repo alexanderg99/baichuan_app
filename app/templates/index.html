@@ -1,0 +1,62 @@
+CTYPE html>
+<html lang="en">
+
+	<head>
+		    <!-- Include any necessary meta tags, stylesheets, or scripts -->
+		        <meta charset="UTF-8">
+			    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+			        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+				    <title>Chat Interface</title>
+	</head>
+
+	<body>
+
+		    <h1>Chat Interface</h1>
+
+		        <!-- Display the response, if available -->
+			    <div id="response">
+				            {% if response %}
+					            <p>User: {{ request.form.query if request.form.query else '' }}</p>
+						            <p>Model: {{ response }}</p>
+							            {% endif %}
+								        </div>
+
+									    <!-- Create a simple form to submit messages -->
+									        <form id="chatForm">
+											        <label for="query">Your message:</label>
+												        <input type="text" id="query" name="query" required>
+													        <button type="button" onclick="sendMessage()">
+															    </form>
+
+															        <script>
+																	        async function sendMessage() {
+																			            const query = document.getElementById('query').value;
+																			            const responseDiv = document.getElementById('response');
+
+																			            try {
+																					                    const response = await fetch('/chat', {
+																								                        method: 'POST',
+																								                        headers: {
+																												                        'Content-Type': 'application/json',
+																												                    },
+																								                        body: JSON.stringify({ query }),
+																								                    });
+
+																					           esponseData = await response.json();
+
+																					                    // Update the responseDiv with the model's response
+																					                    responseDiv.innerHTML = `
+																					                        <p>User: ${query}</p>
+																						                        <p>Model: ${responseData.response}</p>
+																						                    `;
+																					                } catch (error) {
+																								                console.error('Error sending message:', error);
+																								            }
+																			        }
+    </script>
+
+	</body>
+
+</html>
+
+

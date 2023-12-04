@@ -7,10 +7,11 @@ import logging
 from chatbot import Chatbot
 from pydantic import BaseModel
 
+from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
 router = APIRouter()
-#templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="templates")
 baichuan=Chatbot()
 class Query(BaseModel):
     query: str
@@ -19,16 +20,20 @@ class Query(BaseModel):
 
 
 @app.get("/")
-async def read_root():
-    return {"message": "Deployment is possible."}
+async def read_root(request: Request):
+     return templates.TemplateResponse("index.html", {"request": request})
+
+    #    return {"message": "Deployment is possible."}
 
 
 @app.post("/chat")
-async def chat(data: Query):
+async def chat(request: Request, data: Query):
     try:
          input_text = data.query
          response = baichuan.chat(input_text)
-         
+         logger.info(f"Request: {request.url} - Input: {input_text}")
+         logger.info(f"Response: {response}")
+         return templates.TemplateResponse("index.html", {"request": request, "response": response})
 
     except Exception as e:
          logging.log.error("Retry")
@@ -38,4 +43,5 @@ async def chat(data: Query):
     return {"response": response}
 
 if __name__ == "__main__":
-      uvicorn.run("main:app", reload=True, port=8000, host="0.0.0.0")
+      uvicorn.run("main:app",port=8000, host="0.0.0.0")
+      
